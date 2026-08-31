@@ -2412,9 +2412,14 @@ function ldWD(){$.wlg=wlgLoad();const a=wlgActive();
 
 
 function selI(k,s){
+  /* AUDIT FIX: `proSetActiveInstrument(active, …)` referenced an undefined
+     variable `active`, throwing a ReferenceError that aborted the rest of the
+     function — so clicking a watchlist row never opened the chart. Hoist the
+     resolved instrument and pass it (falling back to the raw key/symbol). */
+  let inst=null;
   /* FUT auto-roll for watchlist -> chart clicks. */
   try{
-    const inst=normalizeInstrument(($.wl||[]).find(w=>w.k===k)||{k,s,n:s,x:String(k||'').split('_')[0]});
+    inst=normalizeInstrument(($.wl||[]).find(w=>w.k===k)||{k,s,n:s,x:String(k||'').split('_')[0]});
     if(inst){
       const r=chartResolveFut(inst);
       if(r.pendingMcx)applyMcxAsync(r.sym,inst.k);
@@ -2424,7 +2429,7 @@ function selI(k,s){
       }
     }
   }catch(e){}
-proSetActiveInstrument(active,true);$.cKey=k;$.cSym=s;$.cd=[];document.getElementById('cSN').textContent=s;['dC1','dO1','dA1'].forEach(id=>{const inp=document.querySelector(`#${id} input`);if(inp)inp.value=s;$.ddSel[id]={k,s};});nav('chart');
+proSetActiveInstrument(inst||{k,s,n:s,x:String(k||'').split('_')[0]},true);$.cKey=k;$.cSym=s;$.cd=[];document.getElementById('cSN').textContent=s;['dC1','dO1','dA1'].forEach(id=>{const inp=document.querySelector(`#${id} input`);if(inp)inp.value=s;$.ddSel[id]={k,s};});nav('chart');
 }
 
 function setupGlobalSearch(){const gS=document.getElementById('gS');let t=null;gS.addEventListener('input',()=>{clearTimeout(t);t=setTimeout(()=>gSr(gS.value),150);});gS.addEventListener('focus',()=>{if(gS.value)gSr(gS.value);});gS.addEventListener('blur',()=>setTimeout(gSh,250));}
