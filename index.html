@@ -231,6 +231,11 @@ button:disabled{opacity:.55;cursor:not-allowed}
 .algo-pro-grid{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(280px,.85fr);gap:8px;margin-bottom:8px}.algo-box{background:var(--b3);border:1px solid var(--bd);border-radius:8px;overflow:hidden}.algo-box-head{min-height:35px;padding:8px 11px;border-bottom:1px solid var(--bd);display:flex;align-items:center;justify-content:space-between;font-size:10px;font-weight:700}.algo-box-body{padding:10px}.tech-grid{display:grid;grid-template-columns:repeat(4,minmax(80px,1fr));gap:6px}.tech-item{padding:8px;background:var(--b1);border-radius:5px;border:1px solid rgba(42,51,70,.75)}.tech-item span{display:block;font-size:10px;color:var(--t3);text-transform:uppercase;margin-bottom:4px}.tech-item b{font-size:11px}.tech-item small{display:block;font-size:10px;color:var(--t3);margin-top:2px}.reason-list{display:flex;flex-direction:column;gap:5px}.reason{display:grid;grid-template-columns:17px 1fr auto;align-items:center;gap:6px;padding:6px 7px;background:var(--b1);border-radius:5px;font-size:10px}.reason .weight{font-weight:800}.reason.pos .weight{color:var(--gn)}.reason.neg .weight{color:var(--rd)}.reason.neu .weight{color:var(--yl)}
 .backtest-box{margin-bottom:8px}.bt-stats{display:grid;grid-template-columns:repeat(6,minmax(90px,1fr));border-bottom:1px solid var(--bd)}.bt-stat{padding:9px 10px;border-right:1px solid var(--bd)}.bt-stat:last-child{border:0}.bt-stat span{display:block;font-size:10px;color:var(--t3);text-transform:uppercase;margin-bottom:4px}.bt-stat b{font-size:12px}.equity-wrap{height:190px;padding:8px 10px 4px;position:relative}.equity-wrap canvas{width:100%;height:100%}.bt-foot{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;padding:7px 10px;border-top:1px solid var(--bd);font-size:10px;color:var(--t3)}
 .algo-trades{max-height:260px;overflow:auto}.algo-trades .dt td,.algo-trades .dt th{padding:6px 8px}.trade-side{font-weight:750}.muted-note{font-size:10px;color:var(--t3);font-weight:400}.algo-disclaimer{font-size:10px;color:var(--t3);padding:7px 10px;border:1px dashed var(--bd);border-radius:6px;line-height:1.45}
+.an-grid{display:grid;grid-template-columns:repeat(4,minmax(90px,1fr));gap:6px}.an-stat{padding:9px 10px;background:var(--b1);border-radius:6px;border:1px solid rgba(42,51,70,.75)}.an-stat span{display:block;font-size:10px;color:var(--t3);text-transform:uppercase;margin-bottom:4px}.an-stat b{font-size:12px}
+.yr-table{max-height:250px;overflow:auto}.yr-table .dt td,.yr-table .dt th{padding:6px 8px}
+.mc-wrap{height:150px;padding:8px 10px 4px;position:relative}.mc-wrap canvas{width:100%;height:100%}
+@media(max-width:1150px){.an-grid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:760px){.an-grid{grid-template-columns:1fr 1fr}}
 @media(max-width:1150px){.algo-main-grid{grid-template-columns:repeat(4,minmax(110px,1fr))}.algo-main-grid .span-2{grid-column:span 2}.algo-risk-grid{grid-template-columns:repeat(3,1fr)}.algo-plan-grid{grid-template-columns:repeat(3,1fr)}.bt-stats{grid-template-columns:repeat(3,1fr)}.tech-grid{grid-template-columns:repeat(3,1fr)}}
 @media(max-width:760px){.algo-main-grid,.algo-risk-grid{grid-template-columns:1fr 1fr}.algo-main-grid .span-2{grid-column:1/-1}.algo-signal-hero{grid-template-columns:1fr auto}.algo-signal-name{font-size:21px}.score-ring{width:68px;height:68px}.algo-plan-grid{grid-template-columns:1fr 1fr}.algo-pro-grid{grid-template-columns:1fr}.tech-grid{grid-template-columns:1fr 1fr}.bt-stats{grid-template-columns:1fr 1fr}.equity-wrap{height:150px}}
 
@@ -1482,7 +1487,7 @@ body{font-size:13px;line-height:1.45;font-variant-numeric:tabular-nums}
   <section class="cd algo-control-panel">
     <div class="compact-form-grid algo-main-grid">
       <div class="fgrp span-2"><label>Instrument</label><div class="dd" id="dA1"><input class="fi" id="alI" placeholder="Search instrument…" autocomplete="off"><div class="ddl" id="dA1_L"></div></div></div>
-      <div class="fgrp"><label>Strategy</label><select class="fi" id="alStrat"><option value="trend">Trend Fusion</option><option value="mean">Mean Reversion</option><option value="breakout">Volume Breakout</option></select></div>
+      <div class="fgrp"><label>Strategy</label><select class="fi" id="alStrat"><option value="trend">Trend Fusion</option><option value="mean">Mean Reversion</option><option value="breakout">Volume Breakout</option><option value="momentum">ROC Momentum</option><option value="swing">Swing Pullback</option></select></div>
       <div class="fgrp"><label>Timeframe</label><select class="fi" id="alTF"><option value="minutes/5">5 Min</option><option value="minutes/15">15 Min</option><option value="hours/1">1 Hour</option><option value="days/1" selected>Daily</option></select></div>
       <div class="fgrp"><label>Direction</label><select class="fi" id="alDir"><option value="BOTH">Long + Short</option><option value="LONG">Long only</option><option value="SHORT">Short only</option></select></div>
       <div class="fgrp"><label>Bars</label><select class="fi" id="alBars"><option value="250">250</option><option value="500" selected>500</option><option value="750">750</option><option value="1000">1000</option></select></div>
@@ -1496,7 +1501,7 @@ body{font-size:13px;line-height:1.45;font-variant-numeric:tabular-nums}
       <div class="fgrp"><label>Target R multiple</label><input class="fi" type="number" id="alRR" value="2" min="1" max="10" step="0.25"></div>
     </div></details>
   </section>
-  <section id="alR" class="algo-pro-results"><div class="large-empty algo-welcome"><div class="empty-icon">🧠</div><b>Professional signal workspace</b><span>Select an instrument, strategy and timeframe. Results include regime detection, a volatility-adjusted trade plan and no-lookahead backtest.</span><div class="algo-feature-chips"><i>EMA / MACD / RSI</i><i>ADX / ATR</i><i>Bollinger Bands</i><i>Position sizing</i><i>Equity curve</i></div></div></section>
+  <section id="alR" class="algo-pro-results"><div class="large-empty algo-welcome"><div class="empty-icon">🧠</div><b>Professional signal workspace</b><span>Select an instrument, strategy and timeframe. Results include regime detection, a volatility-adjusted trade plan, a no-lookahead backtest, Monte-Carlo simulation and distribution analytics.</span><div class="algo-feature-chips"><i>EMA / MACD / RSI</i><i>ADX / ATR</i><i>Bollinger Bands</i><i>ROC / Stoch / OBV</i><i>Monte-Carlo</i><i>Sortino / Calmar</i><i>Equity curve</i></div></div></section>
 </div>
 
 <!-- OPTION CHAIN LIVE WS MERGED -->
@@ -3377,11 +3382,25 @@ function algoDonchian(candles,period=20){
   const high=Array(candles.length).fill(null),low=Array(candles.length).fill(null);
   for(let i=period;i<candles.length;i++){let h=-Infinity,l=Infinity;for(let j=i-period;j<i;j++){h=Math.max(h,candles[j].h);l=Math.min(l,candles[j].l);}high[i]=h;low[i]=l;}return{high,low};
 }
-function algoIndicators(candles){
-  const close=candles.map(d=>d.c),volume=candles.map(d=>d.v),sma20=_sma(close,20),std20=_std(close,20),macd=_macd(close),adx=algoADX(candles,14),don=algoDonchian(candles,20);
-  return {close,ema20:_ema(close,20),ema50:_ema(close,50),ema200:_ema(close,200),rsi:_rsi(close,14),macd,atr:algoATR(candles,14),adx:adx.adx,pdi:adx.pdi,mdi:adx.mdi,bbMid:sma20,bbUpper:sma20.map((v,i)=>v==null||std20[i]==null?null:v+2*std20[i]),bbLower:sma20.map((v,i)=>v==null||std20[i]==null?null:v-2*std20[i]),volAvg:_sma(volume,20),donHigh:don.high,donLow:don.low};
+function algoROC(close,period=12){const out=Array(close.length).fill(null);for(let i=period;i<close.length;i++){const p=close[i-period];if(Number.isFinite(close[i])&&Number.isFinite(p)&&p)out[i]=(close[i]-p)/p*100;}return out;}
+function algoSmoothArr(vals,period){const out=Array(vals.length).fill(null);for(let i=0;i<vals.length;i++){let s=0,n=0;for(let j=Math.max(0,i-period+1);j<=i;j++){if(vals[j]!=null){s+=vals[j];n++;}}if(n===period)out[i]=s/period;}return out;}
+function algoStoch(candles,period=14,kSmooth=3,dSmooth=3){
+  const raw=Array(candles.length).fill(null);
+  for(let i=period-1;i<candles.length;i++){let hh=-Infinity,ll=Infinity;for(let j=i-period+1;j<=i;j++){hh=Math.max(hh,candles[j].h);ll=Math.min(ll,candles[j].l);}raw[i]=hh>ll?(candles[i].c-ll)/(hh-ll)*100:50;}
+  const k=algoSmoothArr(raw,kSmooth);return{k,d:algoSmoothArr(k,dSmooth)};
 }
-function algoStrategyMeta(strategy){return ({trend:{label:'Trend Fusion',threshold:25},mean:{label:'Mean Reversion',threshold:30},breakout:{label:'Volume Breakout',threshold:30}})[strategy]||{label:'Trend Fusion',threshold:25};}
+function algoOBV(candles){const obv=Array(candles.length).fill(0);for(let i=1;i<candles.length;i++){if(candles[i].c>candles[i-1].c)obv[i]=obv[i-1]+(candles[i].v||0);else if(candles[i].c<candles[i-1].c)obv[i]=obv[i-1]-(candles[i].v||0);else obv[i]=obv[i-1];}return obv;}
+function algoPctRank(series,i,lookback=100){const v=series[i];if(v==null)return null;let lo=0,n=0;for(let j=Math.max(0,i-lookback);j<=i;j++){const x=series[j];if(x==null)continue;n++;if(x<=v)lo++;}return n?lo/n*100:null;}
+function algoIndicators(candles){
+  const close=candles.map(d=>d.c),volume=candles.map(d=>d.v),sma20=_sma(close,20),std20=_std(close,20),macd=_macd(close),adx=algoADX(candles,14),don=algoDonchian(candles,20),don52=algoDonchian(candles,52),atr=algoATR(candles,14),volAvg=_sma(volume,20);
+  const roc=algoROC(close,12),st=algoStoch(candles,14,3,3),obv=algoOBV(candles);
+  const obvSlope=obv.map((v,i)=>i<20?null:(volAvg[i]>0?(v-obv[i-20])/(volAvg[i]*20):null));
+  const atrPct=atr.map((v,i)=>v&&close[i]?v/close[i]*100:null);
+  const atrPctile=atrPct.map((v,i)=>v==null?null:algoPctRank(atrPct,i,100));
+  const rangePos=don52.high.map((h,i)=>h!=null&&don52.low[i]!=null&&h>don52.low[i]?(close[i]-don52.low[i])/(h-don52.low[i])*100:null);
+  return {close,ema20:_ema(close,20),ema50:_ema(close,50),ema200:_ema(close,200),rsi:_rsi(close,14),macd,atr,adx:adx.adx,pdi:adx.pdi,mdi:adx.mdi,bbMid:sma20,bbUpper:sma20.map((v,i)=>v==null||std20[i]==null?null:v+2*std20[i]),bbLower:sma20.map((v,i)=>v==null||std20[i]==null?null:v-2*std20[i]),volAvg,donHigh:don.high,donLow:don.low,roc,stochK:st.k,stochD:st.d,obv,obvSlope,atrPct,atrPctile,rangePos};
+}
+function algoStrategyMeta(strategy){return ({trend:{label:'Trend Fusion',threshold:25},mean:{label:'Mean Reversion',threshold:30},breakout:{label:'Volume Breakout',threshold:30},momentum:{label:'ROC Momentum',threshold:30},swing:{label:'Swing Pullback',threshold:25}})[strategy]||{label:'Trend Fusion',threshold:25};}
 function algoScoreAt(i,strategy,ind,candles,withReasons=false){
   const d=candles[i],reasons=[],meta=algoStrategyMeta(strategy);if(!d)return{score:0,reasons,eligible:false};let score=0,eligible=true,gateReason='';
   const add=(w,text)=>{if(!Number.isFinite(w)||!w)return;score+=w;if(withReasons)reasons.push({w:Math.round(w),text});};
@@ -3409,6 +3428,30 @@ function algoScoreAt(i,strategy,ind,candles,withReasons=false){
     if(breakSide&&volumeAvailable&&vr>=1.2)add((breakSide==='SHORT'?-1:1)*18,`Volume expansion ${vr.toFixed(2)}× confirms the ${breakSide==='LONG'?'upside':'downside'} break`);
     else if(withReasons&&breakSide)reasons.push({w:0,text:volumeAvailable?`Volume ${vr.toFixed(2)}× is below 1.20× confirmation`:'Volume unavailable; price-only breakout gate applies'});
     gateReason=breakSide?(volumeConfirmed?'':'Breakout lacks required volume confirmation'):'Waiting for a close outside the 20-bar channel';
+  }else if(strategy==='momentum'){
+    const roc=ind.roc[i],rocPrev=ind.roc[i-1];
+    if(Number.isFinite(roc))add(algoClamp(roc*1.6,-42,42),`12-bar ROC ${roc>=0?'+':''}${roc.toFixed(1)}%`);
+    if(Number.isFinite(roc)&&Number.isFinite(rocPrev))add(roc>=rocPrev?8:-8,`Momentum ${roc>=rocPrev?'accelerating':'decelerating'}`);
+    if(e20!=null)add(c>=e20?10:-10,`Price ${c>=e20?'above':'below'} EMA20`);
+    if(Number.isFinite(hist))add(hist>=0?10:-10,`MACD histogram ${hist>=0?'positive':'negative'}`);
+    if(Number.isFinite(rsi)){if(rsi>78)add(-8,'RSI overbought — momentum-fade risk');else if(rsi<22)add(8,'RSI oversold — rebound support');}
+    if(volumeAvailable&&vr>1.15)add((score>=0?1:-1)*8,`Volume ${vr.toFixed(2)}× average confirms direction`);
+    eligible=Number.isFinite(roc)&&Math.abs(roc)>=1.5&&Number.isFinite(adx)&&adx>=15;
+    gateReason=(Number.isFinite(roc)&&Math.abs(roc)>=1.5)?'ADX must be at least 15 for a momentum entry':'12-bar ROC must move at least ±1.5%';
+  }else if(strategy==='swing'){
+    const trendDir=(e50!=null&&e200!=null)?(e50>=e200?1:-1):(e20!=null?(c>=e20?1:-1):0);
+    let pulledBack=false;
+    if(e20!=null&&e50!=null&&e200!=null){
+      add(trendDir*20,`Trend ${trendDir>0?'up':'down'} (EMA50 ${trendDir>0?'above':'below'} EMA200)`);
+      const near=trendDir>0?c<=e20:c>=e20,distAtr=Number.isFinite(atr)&&atr>0?Math.abs(c-e20)/atr:0;
+      if(near){add(trendDir*16,`Pullback to EMA20 (${distAtr.toFixed(1)} ATR away)`);pulledBack=true;}
+      else add(trendDir*-10,`Extended ${trendDir>0?'above':'below'} EMA20`);
+      if(Number.isFinite(rsi)){const cooled=trendDir>0?(rsi<55&&rsi>28):(rsi>45&&rsi<72);if(cooled)add(trendDir*10,`RSI ${rsi.toFixed(1)} ${trendDir>0?'cooled during pullback':'relieved during bounce'}`);else add(trendDir*-6,`RSI ${rsi.toFixed(1)} not ideal for a ${trendDir>0?'pullback':'bounce'}`);}
+      if(Number.isFinite(hist))add(hist>=0?8:-8,`MACD histogram ${hist>=0?'positive':'negative'}`);
+      if(Number.isFinite(adx)&&adx>=20)add(trendDir*8,`ADX ${adx.toFixed(1)} keeps the trend alive`);else if(Number.isFinite(adx)){score*=.85;if(withReasons)reasons.push({w:0,text:`ADX ${adx.toFixed(1)} below 20 — trend may be fading`});}
+    }
+    eligible=trendDir!==0&&pulledBack;
+    gateReason=trendDir===0?'EMA50/EMA200 alignment required to define the trend':pulledBack?'':'Waiting for price to pull back to EMA20';
   }else{
     if(e20!=null)add(c>=e20?12:-12,`Price ${c>=e20?'above':'below'} EMA20`);
     if(e20!=null&&e50!=null)add(e20>=e50?18:-18,`EMA20 ${e20>=e50?'above':'below'} EMA50`);
@@ -3436,7 +3479,7 @@ function algoRegimeAt(i,ind,candles){
   return{label,atrPct,bbWidth,adx:toNum(adx,NaN)};
 }
 function algoBacktest(candles,ind,strategy,direction,settings){
-  const meta=algoStrategyMeta(strategy),warmup=strategy==='trend'?200:55,maxHold=strategy==='mean'?18:strategy==='breakout'?40:65;
+  const meta=algoStrategyMeta(strategy),stratCfg={trend:{warmup:200,maxHold:65},mean:{warmup:55,maxHold:18},breakout:{warmup:55,maxHold:40},momentum:{warmup:60,maxHold:45},swing:{warmup:200,maxHold:70}},sc=stratCfg[strategy]||stratCfg.trend,warmup=sc.warmup,maxHold=sc.maxHold;
   let equity=settings.capital,pos=null,trades=[],curve=[],exposure=0,cooldownUntil=-1;const fee=settings.feeBps/10000,cooldownBars=strategy==='mean'?2:1;
   const closePos=(price,reason,index)=>{if(!pos)return false;const gross=(pos.side==='LONG'?price-pos.entry:pos.entry-price)*pos.qty,cost=(pos.entry+price)*pos.qty*fee,pnl=gross-cost,before=equity;equity+=pnl;trades.push({side:pos.side,entry:pos.entry,exit:price,qty:pos.qty,pnl,cost,r:pnl/pos.riskAmount,returnPct:before?pnl/before*100:0,entryIndex:pos.entryIndex,exitIndex:index,entryTime:candles[pos.entryIndex].t,exitTime:candles[index].t,reason,notional:pos.entry*pos.qty,capitalBefore:before});cooldownUntil=index+cooldownBars;pos=null;return true;};
   for(let i=warmup+1;i<candles.length;i++){
@@ -3496,6 +3539,68 @@ function drawAlgoEquity(curve,startCapital){
   cx.clearRect(0,0,W,H);cx.font='500 11px Segoe UI, Arial, sans-serif';cx.strokeStyle='#1c2333';cx.fillStyle='#9eabba';for(let i=0;i<=3;i++){const yy=pad.t+(H-pad.t-pad.b)*i/3;cx.beginPath();cx.moveTo(pad.l,yy);cx.lineTo(W-pad.r,yy);cx.stroke();cx.fillText('₹'+Math.round(max-range*i/3).toLocaleString('en-IN'),W-pad.r+4,yy+3);}const base=y(startCapital);cx.setLineDash([3,3]);cx.strokeStyle='#9eabba';cx.beginPath();cx.moveTo(pad.l,base);cx.lineTo(W-pad.r,base);cx.stroke();cx.setLineDash([]);
   const grad=cx.createLinearGradient(0,pad.t,0,H-pad.b);grad.addColorStop(0,'rgba(124,58,237,.28)');grad.addColorStop(1,'rgba(124,58,237,0)');cx.beginPath();curve.forEach((v,i)=>i?cx.lineTo(x(i),y(v.equity)):cx.moveTo(x(i),y(v.equity)));cx.lineTo(x(curve.length-1),H-pad.b);cx.lineTo(pad.l,H-pad.b);cx.closePath();cx.fillStyle=grad;cx.fill();cx.beginPath();curve.forEach((v,i)=>i?cx.lineTo(x(i),y(v.equity)):cx.moveTo(x(i),y(v.equity)));cx.strokeStyle=vals.at(-1)>=startCapital?'#22c55e':'#ef4444';cx.lineWidth=1.7;cx.stroke();cx.fillStyle='#9eabba';cx.fillText(algoDate(curve[0].t),pad.l,H-4);const end=algoDate(curve.at(-1).t);cx.fillText(end,W-pad.r-cx.measureText(end).width,H-4);
 }
+function algoAnStat(label,value){return `<div class="an-stat"><span>${escapeHtml(label)}</span><b>${escapeHtml(value)}</b></div>`;}
+function algoRng(seed){let s=seed>>>0;return function(){s|=0;s=(s+0x6D2B79F5)|0;let t=Math.imul(s^(s>>>15),1|s);t=(t+Math.imul(t^(t>>>7),61|t))^t;return((t^(t>>>14))>>>0)/4294967296;};}
+function algoMonteCarlo(backtest,settings,iters=1000){
+  const out={median:0,p5:0,p95:0,probProfit:0,probDD20:0,worstDD95:0,best:0,worst:0,hist:[],iters,valid:false,startCapital:settings.capital};
+  const pnls=(backtest.trades||[]).map(x=>x.pnl);if(!pnls.length)return out;
+  out.valid=true;const rand=algoRng(20260901),ends=[],maxDDs=[];
+  for(let n=0;n<iters;n++){
+    let eq=settings.capital,peak=settings.capital,dd=0;
+    for(let k=0;k<pnls.length;k++){eq+=pnls[Math.floor(rand()*pnls.length)];peak=Math.max(peak,eq);dd=Math.max(dd,peak>0?(peak-eq)/peak*100:0);}
+    ends.push(eq);maxDDs.push(dd);
+  }
+  ends.sort((a,b)=>a-b);maxDDs.sort((a,b)=>a-b);
+  const q=(arr,p)=>{const idx=Math.min(arr.length-1,Math.max(0,Math.round((arr.length-1)*p)));return arr[idx];};
+  out.median=q(ends,.5);out.p5=q(ends,.05);out.p95=q(ends,.95);out.best=ends[ends.length-1];out.worst=ends[0];
+  out.probProfit=ends.filter(x=>x>settings.capital).length/iters*100;
+  out.probDD20=maxDDs.filter(x=>x>=20).length/iters*100;
+  out.worstDD95=q(maxDDs,.95);
+  const bins=30,lo=ends[0],hi=ends[ends.length-1],span=(hi-lo)||1,hist=Array(bins).fill(0);
+  ends.forEach(e=>{const b=Math.min(bins-1,Math.floor((e-lo)/span*bins));hist[b]++;});
+  out.hist=hist.map((c,i)=>({x:lo+span*(i+0.5)/bins,count:c}));
+  return out;
+}
+function algoAdvancedStats(backtest,settings,barsPerYear){
+  const trades=backtest.trades||[],curve=backtest.curve||[];
+  const rets=[];for(let i=1;i<curve.length;i++){if(curve[i-1].equity>0)rets.push(curve[i].equity/curve[i-1].equity-1);}
+  const meanR=algoMean(rets),downside=algoMean(rets.filter(x=>x<0).map(x=>x*x)),dd=Math.sqrt(downside);
+  const sortino=dd>0?(meanR/dd)*Math.sqrt(barsPerYear):0;
+  const years=curve.length/barsPerYear,start=settings.capital,end=backtest.endEquity;
+  const annualized=years>0?Math.pow(end/start,1/years)-1:0;
+  const calmar=backtest.maxDD>0?annualized*100/backtest.maxDD:0;
+  const wins=trades.filter(t=>t.pnl>0),losses=trades.filter(t=>t.pnl<0);
+  const avgWin=wins.length?algoMean(wins.map(t=>t.pnl)):0,avgLoss=losses.length?algoMean(losses.map(t=>t.pnl)):0;
+  const payoff=avgLoss<0?Math.abs(avgWin/avgLoss):(avgWin>0?Infinity:0);
+  const largestWin=wins.length?Math.max(...wins.map(t=>t.pnl)):0,largestLoss=losses.length?Math.min(...losses.map(t=>t.pnl)):0;
+  let maxWin=0,maxLoss=0,cw=0,cl=0;
+  trades.forEach(t=>{if(t.pnl>0){cw++;cl=0;maxWin=Math.max(maxWin,cw);}else if(t.pnl<0){cl++;cw=0;maxLoss=Math.max(maxLoss,cl);}else{cw=0;cl=0;}});
+  const avgHold=trades.length?algoMean(trades.map(t=>t.exitIndex-t.entryIndex)):0;
+  return {sortino,calmar,annualized:algoClamp(annualized*100,-1000,1000),avgWin,avgLoss,payoff,largestWin,largestLoss,maxWin,maxLoss,avgHold,years};
+}
+function algoYearlyReturns(curve,startCapital){
+  const groups=new Map();curve.forEach(x=>{const y=new Date(x.t).getFullYear();if(!groups.has(y))groups.set(y,[]);groups.get(y).push(x.equity);});
+  const years=[];let last=startCapital;
+  [...groups.keys()].sort().forEach(y=>{
+    const vals=groups.get(y),end=vals[vals.length-1],ret=(end/last-1)*100;let peak=last,dd=0;
+    vals.forEach(v=>{peak=Math.max(peak,v);dd=Math.max(dd,peak>0?(peak-v)/peak*100:0);});
+    years.push({year:y,end,ret,dd});last=end;
+  });
+  return years;
+}
+function drawAlgoMonteCarlo(mc){
+  const canvas=document.getElementById('alMC');if(!canvas||!mc?.valid)return;const box=canvas.parentElement,W=Math.max(320,box.clientWidth-20),H=Math.max(120,box.clientHeight-12),dpr=Math.max(1,window.devicePixelRatio||1),pixelW=Math.max(1,Math.round(W*dpr)),pixelH=Math.max(1,Math.round(H*dpr));canvas.width=pixelW;canvas.height=pixelH;canvas.style.width=W+'px';canvas.style.height=H+'px';const cx=canvas.getContext('2d');cx.setTransform(pixelW/W,0,0,pixelH/H,0,0);cx.imageSmoothingEnabled=true;
+  const pad={l:8,r:8,t:12,b:18},max=Math.max(...mc.hist.map(x=>x.count),1),lo=Math.min(...mc.hist.map(x=>x.x)),hi=Math.max(...mc.hist.map(x=>x.x)),span=(hi-lo)||1,bw=(W-pad.l-pad.r)/mc.hist.length;
+  cx.clearRect(0,0,W,H);
+  mc.hist.forEach((b,i)=>{const bh=(b.count/max)*(H-pad.t-pad.b),x0=pad.l+i*bw;cx.fillStyle=b.x>=mc.startCapital?'rgba(34,197,94,.5)':'rgba(239,68,68,.45)';cx.fillRect(x0+1,pad.t+(H-pad.t-pad.b)-bh,Math.max(1,bw-2),bh);});
+  const xOf=v=>pad.l+algoClamp((v-lo)/span,0,1)*(W-pad.l-pad.r);
+  cx.setLineDash([3,3]);cx.strokeStyle='#9eabba';cx.beginPath();cx.moveTo(xOf(mc.startCapital),pad.t);cx.lineTo(xOf(mc.startCapital),H-pad.b);cx.stroke();cx.setLineDash([]);
+  cx.strokeStyle='#8b5cf6';cx.beginPath();cx.moveTo(xOf(mc.median),pad.t);cx.lineTo(xOf(mc.median),H-pad.b);cx.stroke();
+  cx.font='500 10px Segoe UI, Arial, sans-serif';cx.fillStyle='#9eabba';
+  cx.fillText('₹'+Math.round(lo).toLocaleString('en-IN'),pad.l,H-4);
+  const endTxt='₹'+Math.round(hi).toLocaleString('en-IN');cx.fillText(endTxt,W-pad.r-cx.measureText(endTxt).width,H-4);
+  cx.fillStyle='#8b5cf6';cx.fillText('median',xOf(mc.median)+3,pad.t+8);
+}
 function exportAlgoTrades(){
   const r=$.algoResult;if(!r?.backtest?.trades?.length)return ts('No backtest trades to export','w');const rows=[['Side','Entry Date','Exit Date','Entry','Exit','Qty','PnL','R','Costs','Reason'],...r.backtest.trades.map(x=>[x.side,new Date(x.entryTime).toISOString(),new Date(x.exitTime).toISOString(),x.entry,x.exit,x.qty,x.pnl,x.r,x.cost,x.reason])],csv=rows.map(row=>row.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(',')).join('\n'),blob=new Blob([csv],{type:'text/csv'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=`${r.symbol.replace(/[^a-z0-9]/gi,'_')}_${r.strategy}_backtest.csv`;a.click();setTimeout(()=>URL.revokeObjectURL(url),500);
 }
@@ -3513,7 +3618,7 @@ async function runA(){
   button.disabled=true;button.textContent='Analysing…';out.innerHTML='<div class="large-empty"><div class="ld"><div class="sp"></div></div><b>Building indicators and backtest</b><span>Fetching candles and evaluating signals without look-ahead…</span></div>';
   const to=new Date(),from=new Date(),[unit,iv]=document.getElementById('alTF').value.split('/'),interval=Number(iv);if(unit==='minutes'&&interval<=15)from.setMonth(from.getMonth()-1);else if(unit==='minutes'||unit==='hours')from.setMonth(from.getMonth()-3);else from.setFullYear(from.getFullYear()-Math.max(2,Math.ceil(bars/220)+1));
   try{
-    const url=`${API_BASE}${END.HIST}/${encodeURIComponent(sel.k)}/${unit}/${iv}/${localISODate(to)}/${localISODate(from)}`,raw=await apiHist(url),all=(raw.data?.candles||[]).sort((a,b)=>new Date(a[0])-new Date(b[0])).map(c=>({t:new Date(c[0]),o:toNum(c[1]),h:toNum(c[2]),l:toNum(c[3]),c:toNum(c[4]),v:toNum(c[5])})),closed=algoOnlyClosedCandles(all,unit,interval),candles=closed.slice(-bars),minimum=strategy==='trend'?220:100;
+    const url=`${API_BASE}${END.HIST}/${encodeURIComponent(sel.k)}/${unit}/${iv}/${localISODate(to)}/${localISODate(from)}`,raw=await apiHist(url),all=(raw.data?.candles||[]).sort((a,b)=>new Date(a[0])-new Date(b[0])).map(c=>({t:new Date(c[0]),o:toNum(c[1]),h:toNum(c[2]),l:toNum(c[3]),c:toNum(c[4]),v:toNum(c[5])})),closed=algoOnlyClosedCandles(all,unit,interval),candles=closed.slice(-bars),minimum={trend:220,swing:220,mean:100,breakout:100,momentum:100}[strategy]||100;
     /* AUDIT FIX (algo): e.g. 15-minute candles cap at 1 month on the v3 API,
        so "Bars 1000" can silently deliver ~550. Surface it instead of letting
        the user believe they got what they asked for. */
@@ -3527,6 +3632,8 @@ async function runA(){
     const rrFloorAtr=Number.isFinite(atr)?atr*atrMult:0,rrMid=ind.bbMid[i];let rrBlocked=false;
     if(side!=='WAIT'&&rrFloorAtr>0){const tgt=strategy==='mean'&&Number.isFinite(rrMid)&&((side==='LONG'&&rrMid>last.c)||(side==='SHORT'&&rrMid<last.c))?rrMid:(side==='LONG'?last.c+rrFloorAtr*rr:last.c-rrFloorAtr*rr),plannedReward=side==='LONG'?tgt-last.c:last.c-tgt;if(plannedReward<rrFloorAtr){side='WAIT';rrBlocked=true;}}const regimeBonus=strategy==='mean'?(regime.adx<22?6:regime.adx>28?-8:0):(regime.adx>=25?7:0),strength=Math.min(95,Math.max(5,Math.round(Math.abs(current.score)*.9+regimeBonus))),riskDist=Number.isFinite(atr)?atr*atrMult:0,entry=last.c,stop=side==='LONG'?entry-riskDist:side==='SHORT'?entry+riskDist:null,meanTarget=ind.bbMid[i],t1=side==='LONG'?(strategy==='mean'&&meanTarget>entry?meanTarget:entry+riskDist):side==='SHORT'?(strategy==='mean'&&meanTarget<entry?meanTarget:entry-riskDist):null,stretchTarget=side==='LONG'?ind.bbUpper[i]:side==='SHORT'?ind.bbLower[i]:null,t2=side==='LONG'?(strategy==='mean'&&stretchTarget>t1?stretchTarget:entry+riskDist*rr):side==='SHORT'?(strategy==='mean'&&stretchTarget<t1?stretchTarget:entry-riskDist*rr):null,riskAmount=capital*riskPct/100,riskQty=side!=='WAIT'&&riskDist>0?Math.floor(riskAmount/riskDist):0,notionalQty=Math.floor(capital/entry),qty=Math.min(riskQty,notionalQty),support=ind.donLow[i],resistance=ind.donHigh[i],settings={capital,riskPct,feeBps,atrMult,rr},backtest=algoBacktest(candles,ind,strategy,direction,settings),tfLabel=document.getElementById('alTF').selectedOptions[0].textContent;
     const heroClass=side==='LONG'?'long':side==='SHORT'?'short':'wait',signalColor=side==='LONG'?'var(--gn)':side==='SHORT'?'var(--rd)':'var(--yl)',signalName=side==='WAIT'?'WAIT / NO TRADE':`${side} SETUP`,pf=backtest.profitFactor===Infinity?'∞':algoValue(backtest.profitFactor,2),rsi=ind.rsi[i],macdH=ind.macd.h[i],adx=ind.adx[i],vr=ind.volAvg[i]?last.v/ind.volAvg[i]:0,volOk=Number.isFinite(ind.volAvg[i])&&ind.volAvg[i]>0&&last.v>0,bbWidth=regime.bbWidth;
+    const minutesPerBar=unit==='minutes'?interval:unit==='hours'?interval*60:1440,barsPerYear=Math.round(252*375/Math.max(1,minutesPerBar)),roc=ind.roc[i],stochK=ind.stochK[i],stochD=ind.stochD[i],obvSlope=ind.obvSlope[i],rangePos=ind.rangePos[i],atrPctile=ind.atrPctile[i];
+    const adv=algoAdvancedStats(backtest,settings,barsPerYear),mc=algoMonteCarlo(backtest,settings,1000),yearly=algoYearlyReturns(backtest.curve,capital);
     /* AUDIT FIX (algo): a WAIT caused purely by the Long-only / Short-only
        filter used to say "wait for threshold confirmation" — now it says what
        actually blocked the setup. */
@@ -3540,11 +3647,13 @@ async function runA(){
     out.innerHTML=`
       <div class="algo-signal-hero ${heroClass}"><div><div class="algo-symbol-line"><b>${escapeHtml(sel.s)}</b><span>•</span><span>${escapeHtml(tfLabel)}</span><span>•</span><span>${escapeHtml(meta.label)}</span><span>•</span><span>${candles.length} bars</span><span>•</span><span>Candle ${algoDate(last.t)}</span></div><div class="algo-signal-name">${signalName}</div><div class="algo-signal-meta"><span>Last <b>${entry.toFixed(2)}</b></span><span>Score <b class="${current.score>=0?'pp':'pn'}">${current.score>=0?'+':''}${current.score}</b></span><span>Regime <b>${escapeHtml(regime.label)}</b></span><span>ATR <b>${algoValue(atr)}</b></span></div></div><div class="score-ring" style="--angle:${strength*3.6}deg;--signal-color:${signalColor}"><div><b>${strength}%</b><span>signal strength</span></div></div></div>
       <div class="algo-plan-grid"><div class="plan-card"><span>Entry reference</span><b>${side==='WAIT'?'—':entry.toFixed(2)}</b><small>${side==='WAIT'?waitNote:'Signal-close reference'}</small></div><div class="plan-card stop"><span>ATR stop</span><b>${stop==null?'—':stop.toFixed(2)}</b><small>${atrMult.toFixed(1)} × ATR</small></div><div class="plan-card target"><span>Target 1</span><b>${t1==null?'—':t1.toFixed(2)}</b><small>${strategy==='mean'?'Bollinger mean':'1.0R partial level'}</small></div><div class="plan-card target"><span>Target 2</span><b>${t2==null?'—':t2.toFixed(2)}</b><small>${strategy==='mean'?'Opposite-band stretch':rr.toFixed(2)+'R objective'}</small></div><div class="plan-card"><span>Risk-sized units</span><b>${qty||'—'}</b><small>₹${riskAmount.toLocaleString('en-IN',{maximumFractionDigits:0})} risk • capped at 1× model capital</small></div><div class="plan-card"><span>20-bar range</span><b>${algoValue(support)} – ${algoValue(resistance)}</b><small>Support / resistance</small></div></div>
-      <div class="algo-pro-grid"><section class="algo-box"><div class="algo-box-head"><span>Technical dashboard</span><span class="muted-note">Latest completed candle</span></div><div class="algo-box-body"><div class="tech-grid">${algoTechCard('EMA 20',algoValue(ind.ema20[i]),entry>=ind.ema20[i]?'Price above':'Price below',entry>=ind.ema20[i]?'pp':'pn')}${algoTechCard('EMA 50',algoValue(ind.ema50[i]),ind.ema20[i]>=ind.ema50[i]?'Bull alignment':'Bear alignment',ind.ema20[i]>=ind.ema50[i]?'pp':'pn')}${algoTechCard('EMA 200',algoValue(ind.ema200[i]),ind.ema200[i]!=null?(entry>=ind.ema200[i]?'Above long trend':'Below long trend'):'Insufficient bars',ind.ema200[i]!=null?(entry>=ind.ema200[i]?'pp':'pn'):'')}${algoTechCard('RSI 14',algoValue(rsi,1),rsi>70?'Overbought':rsi<30?'Oversold':'Neutral zone',rsi>=50?'pp':'pn')}${algoTechCard('MACD hist.',algoValue(macdH,3),macdH>=0?'Positive momentum':'Negative momentum',macdH>=0?'pp':'pn')}${algoTechCard('ADX 14',algoValue(adx,1),adx>=25?'Trending':'Weak / range',adx>=25?'pp':'')}${algoTechCard('ATR %',algoValue(regime.atrPct,2)+'%',regime.atrPct>=3?'High volatility':'Normal volatility',regime.atrPct>=3?'pn':'')}${algoTechCard('Volume ratio',volOk?algoValue(vr,2)+'×':'—',volOk?(vr>=1.25?'Above average':'Below average'):'No volume for indices',volOk&&vr>=1.25?'pp':'')}${algoTechCard('BB width',algoValue(bbWidth,2)+'%',bbWidth<4?'Compression':'Expanded')}${algoTechCard('+DI / −DI',`${algoValue(ind.pdi[i],1)} / ${algoValue(ind.mdi[i],1)}`,ind.pdi[i]>=ind.mdi[i]?'Buy pressure leads':'Sell pressure leads',ind.pdi[i]>=ind.mdi[i]?'pp':'pn')}${algoTechCard('20-bar high',algoValue(resistance),'Breakout reference')}${algoTechCard('20-bar low',algoValue(support),'Breakdown reference')}</div></div></section><section class="algo-box"><div class="algo-box-head"><span>Signal rationale</span><span class="muted-note">Composite score ${current.score}</span></div><div class="algo-box-body"><div class="reason-list">${reasons||'<div class="reason neu"><span>◆</span><span>No complete factors</span><span class="weight">—</span></div>'}</div></div></section></div>
+      <div class="algo-pro-grid"><section class="algo-box"><div class="algo-box-head"><span>Technical dashboard</span><span class="muted-note">Latest completed candle</span></div><div class="algo-box-body"><div class="tech-grid">${algoTechCard('EMA 20',algoValue(ind.ema20[i]),entry>=ind.ema20[i]?'Price above':'Price below',entry>=ind.ema20[i]?'pp':'pn')}${algoTechCard('EMA 50',algoValue(ind.ema50[i]),ind.ema20[i]>=ind.ema50[i]?'Bull alignment':'Bear alignment',ind.ema20[i]>=ind.ema50[i]?'pp':'pn')}${algoTechCard('EMA 200',algoValue(ind.ema200[i]),ind.ema200[i]!=null?(entry>=ind.ema200[i]?'Above long trend':'Below long trend'):'Insufficient bars',ind.ema200[i]!=null?(entry>=ind.ema200[i]?'pp':'pn'):'')}${algoTechCard('RSI 14',algoValue(rsi,1),rsi>70?'Overbought':rsi<30?'Oversold':'Neutral zone',rsi>=50?'pp':'pn')}${algoTechCard('MACD hist.',algoValue(macdH,3),macdH>=0?'Positive momentum':'Negative momentum',macdH>=0?'pp':'pn')}${algoTechCard('ADX 14',algoValue(adx,1),adx>=25?'Trending':'Weak / range',adx>=25?'pp':'')}${algoTechCard('ATR %',algoValue(regime.atrPct,2)+'%',regime.atrPct>=3?'High volatility':'Normal volatility',regime.atrPct>=3?'pn':'')}${algoTechCard('Volume ratio',volOk?algoValue(vr,2)+'×':'—',volOk?(vr>=1.25?'Above average':'Below average'):'No volume for indices',volOk&&vr>=1.25?'pp':'')}${algoTechCard('BB width',algoValue(bbWidth,2)+'%',bbWidth<4?'Compression':'Expanded')}${algoTechCard('+DI / −DI',`${algoValue(ind.pdi[i],1)} / ${algoValue(ind.mdi[i],1)}`,ind.pdi[i]>=ind.mdi[i]?'Buy pressure leads':'Sell pressure leads',ind.pdi[i]>=ind.mdi[i]?'pp':'pn')}${algoTechCard('20-bar high',algoValue(resistance),'Breakout reference')}${algoTechCard('20-bar low',algoValue(support),'Breakdown reference')}${algoTechCard('ROC 12',roc!=null?(roc>=0?'+':'')+roc.toFixed(1)+'%':'—',roc!=null?(roc>=0?'Positive momentum':'Negative momentum'):'Insufficient bars',roc!=null?(roc>=0?'pp':'pn'):'')}${algoTechCard('Stoch %K/%D',`${stochK!=null?algoValue(stochK,1):'—'} / ${stochD!=null?algoValue(stochD,1):'—'}`,stochD!=null?(stochD>80?'Overbought':stochD<20?'Oversold':'Neutral zone'):'')}${algoTechCard('OBV slope',obvSlope!=null?algoValue(obvSlope,2)+'×':'—',obvSlope!=null?(obvSlope>=0?'Accumulation':'Distribution'):'No volume',obvSlope!=null?(obvSlope>=0?'pp':'pn'):'')}${algoTechCard('52-bar position',rangePos!=null?algoValue(rangePos,0)+'%':'—',rangePos!=null?(rangePos>75?'Near 52-bar highs':rangePos<25?'Near 52-bar lows':'Mid range'):'')}${algoTechCard('ATR percentile',atrPctile!=null?algoValue(atrPctile,0)+'%':'—',atrPctile!=null?(atrPctile>80?'Elevated volatility':atrPctile<20?'Quiet regime':'Normal'):'')}</div></div></section><section class="algo-box"><div class="algo-box-head"><span>Signal rationale</span><span class="muted-note">Composite score ${current.score}</span></div><div class="algo-box-body"><div class="reason-list">${reasons||'<div class="reason neu"><span>◆</span><span>No complete factors</span><span class="weight">—</span></div>'}</div></div></section></div>
       <section class="algo-box backtest-box"><div class="algo-box-head"><span>Cost-aware backtest</span><div><button type="button" class="btn bo bs" onclick="exportAlgoTrades()">Export CSV</button></div></div><div class="bt-stats"><div class="bt-stat"><span>Net return</span><b class="${backtest.netReturn>=0?'pp':'pn'}">${backtest.netReturn>=0?'+':''}${backtest.netReturn.toFixed(2)}%</b></div><div class="bt-stat"><span>Max drawdown</span><b class="pn">-${backtest.maxDD.toFixed(2)}%</b></div><div class="bt-stat"><span>Win rate</span><b>${backtest.winRate.toFixed(1)}%</b></div><div class="bt-stat"><span>Profit factor</span><b>${pf}</b></div><div class="bt-stat"><span>Trades</span><b>${backtest.trades.length}</b></div><div class="bt-stat"><span>Expectancy</span><b class="${backtest.expectancyR>=0?'pp':'pn'}">${backtest.expectancyR>=0?'+':''}${backtest.expectancyR.toFixed(2)}R</b></div></div><div class="equity-wrap"><canvas id="alEquity"></canvas></div><div class="bt-foot"><span>Start ₹${capital.toLocaleString('en-IN')} → End ₹${backtest.endEquity.toLocaleString('en-IN',{maximumFractionDigits:0})}</span><span>SQN-like score ${backtest.sharpe.toFixed(2)} • Exposure ${backtest.exposure.toFixed(1)}% • Costs ₹${backtest.totalCosts.toFixed(0)}</span><span>Benchmark buy &amp; hold ${backtest.buyHold>=0?'+':''}${backtest.buyHold.toFixed(2)}%</span></div></section>
+      <div class="algo-pro-grid"><section class="algo-box"><div class="algo-box-head"><span>Risk &amp; distribution analytics</span><span class="muted-note">Annualised using ${barsPerYear} bars / year</span></div><div class="algo-box-body"><div class="an-grid">${algoAnStat('Sortino ratio',algoValue(adv.sortino,2))}${algoAnStat('Calmar ratio',algoValue(adv.calmar,2))}${algoAnStat('Annualised return',(adv.annualized>=0?'+':'')+adv.annualized.toFixed(2)+'%')}${algoAnStat('Avg win',fm(adv.avgWin))}${algoAnStat('Avg loss',fm(adv.avgLoss))}${algoAnStat('Payoff ratio',adv.payoff===Infinity?'∞':algoValue(adv.payoff,2))}${algoAnStat('Largest win',fm(adv.largestWin))}${algoAnStat('Largest loss',fm(adv.largestLoss))}${algoAnStat('Max win streak',adv.maxWin+' trades')}${algoAnStat('Max loss streak',adv.maxLoss+' trades')}${algoAnStat('Avg holding',algoValue(adv.avgHold,1)+' bars')}${algoAnStat('Data span',algoValue(adv.years,2)+' yrs')}</div></div></section><section class="algo-box"><div class="algo-box-head"><span>Yearly performance</span><span class="muted-note">Calendar-year equity change</span></div><div class="algo-box-body yr-table"><table class="dt"><thead><tr><th>Year</th><th>Return</th><th>Max DD</th><th>End equity</th></tr></thead><tbody>${yearly.length?yearly.map(y=>`<tr><td>${y.year}</td><td class="${y.ret>=0?'pp':'pn'}">${y.ret>=0?'+':''}${y.ret.toFixed(2)}%</td><td class="pn">-${y.dd.toFixed(2)}%</td><td>₹${y.end.toLocaleString('en-IN',{maximumFractionDigits:0})}</td></tr>`).join(''):emptyTableRow(4,'📅','No yearly buckets','The backtest sample spans less than one full calendar year.')}</tbody></table></div></section></div>
+      <section class="algo-box backtest-box"><div class="algo-box-head"><span>Monte-Carlo simulation</span><span class="muted-note">${mc.iters} reshuffles of trade P&amp;L • bootstrap (IID)</span></div>${mc.valid?`<div class="bt-stats"><div class="bt-stat"><span>Median end equity</span><b class="${mc.median>=capital?'pp':'pn'}">₹${mc.median.toLocaleString('en-IN',{maximumFractionDigits:0})}</b></div><div class="bt-stat"><span>5th percentile</span><b>₹${mc.p5.toLocaleString('en-IN',{maximumFractionDigits:0})}</b></div><div class="bt-stat"><span>95th percentile</span><b>₹${mc.p95.toLocaleString('en-IN',{maximumFractionDigits:0})}</b></div><div class="bt-stat"><span>Probability of profit</span><b class="${mc.probProfit>=50?'pp':'pn'}">${mc.probProfit.toFixed(1)}%</b></div><div class="bt-stat"><span>Prob. ≥20% drawdown</span><b class="pn">${mc.probDD20.toFixed(1)}%</b></div><div class="bt-stat"><span>95th-pct max DD</span><b class="pn">-${mc.worstDD95.toFixed(2)}%</b></div></div><div class="mc-wrap"><canvas id="alMC"></canvas></div>`:'<div class="algo-box-body"><div class="reason neu"><span>◆</span><span>Not enough completed trades for resampling — run on a larger sample.</span><span class="weight">—</span></div></div>'}</section>
       <section class="algo-box"><div class="algo-box-head"><span>Recent simulated trades</span><span class="muted-note">Conservative same-bar stop priority</span></div><div class="algo-trades"><table class="dt"><thead><tr><th>Side</th><th>Entry</th><th>Exit</th><th>Entry ₹</th><th>Exit ₹</th><th>Qty</th><th>P&amp;L</th><th>R</th><th>Reason</th></tr></thead><tbody>${recent.length?recent.map(x=>`<tr><td class="trade-side ${x.side==='LONG'?'pp':'pn'}">${x.side}</td><td>${algoDate(x.entryTime)}</td><td>${algoDate(x.exitTime)}</td><td>${x.entry.toFixed(2)}</td><td>${x.exit.toFixed(2)}</td><td>${x.qty}</td><td>${fp(x.pnl)}</td><td class="${x.r>=0?'pp':'pn'}">${x.r>=0?'+':''}${x.r.toFixed(2)}R</td><td>${escapeHtml(x.reason)}</td></tr>`).join(''):emptyTableRow(9,'🧪','No simulated trades','The selected rules did not produce a complete trade in this sample.')}</tbody></table></div></section>
       <div class="algo-disclaimer">Educational quantitative analysis only—not investment advice or an exchange-approved algo. Signals use completed historical candles. Backtests use closed candles and fixed rules, are hypothetical, can overfit, and may differ materially from live execution due to gaps, liquidity, taxes, slippage and API latency. Validate independently before risking capital.</div>`;
-    $.algoResult={symbol:sel.s,strategy,backtest,candles,settings};requestAnimationFrame(()=>drawAlgoEquity(backtest.curve,capital));
+    $.algoResult={symbol:sel.s,strategy,backtest,candles,settings,mc};requestAnimationFrame(()=>{drawAlgoEquity(backtest.curve,capital);if(mc.valid)drawAlgoMonteCarlo(mc);});
   }catch(e){out.innerHTML=`<div class="large-empty compact-empty"><div class="empty-icon">⚠️</div><b>Analysis unavailable</b><span>${escapeHtml(e.message)}</span></div>`;ts('Algo: '+e.message,'e');}
   finally{button.disabled=false;button.textContent='▶ Analyse';}
 }
@@ -3957,7 +4066,7 @@ function showQuickPanel(id,buttonId){const panel=document.getElementById(id);if(
 function applyAdaptiveDensity(){const touch=window.matchMedia?.('(pointer: coarse)').matches||/Android|iPhone|iPad/i.test(navigator.userAgent),w=window.innerWidth;document.body.classList.remove('density-touch','density-compact','density-comfort');document.body.classList.add(touch||w<820?'density-touch':w<1500?'density-compact':'density-comfort');if($.cd?.length&&document.getElementById('pg-chart')?.classList.contains('on'))setTimeout(drawC,80);}
 let densityResizeTimer;window.addEventListener('resize',()=>{clearTimeout(densityResizeTimer);densityResizeTimer=setTimeout(applyAdaptiveDensity,140);});window.addEventListener('orientationchange',()=>setTimeout(applyAdaptiveDensity,180));
 // Migrate legacy persistent secrets/tokens before the original DOMContentLoaded handler runs.
-window.addEventListener('resize',()=>{if($.algoResult?.backtest?.curve)setTimeout(()=>drawAlgoEquity($.algoResult.backtest.curve,$.algoResult.settings.capital),120);});
+window.addEventListener('resize',()=>{if($.algoResult?.backtest?.curve)setTimeout(()=>{drawAlgoEquity($.algoResult.backtest.curve,$.algoResult.settings.capital);if($.algoResult?.mc)drawAlgoMonteCarlo($.algoResult.mc);},120);});
 const legacyToken=localStorage.getItem('u_tok');if(legacyToken&&!sessionStorage.getItem('u_tok'))sessionStorage.setItem('u_tok',legacyToken);localStorage.removeItem('u_tok');localStorage.removeItem('u_as');
 window.addEventListener('DOMContentLoaded',()=>{
   applyAdaptiveDensity();
