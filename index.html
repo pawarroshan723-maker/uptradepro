@@ -125,6 +125,18 @@ select.fi{appearance:none;background-image:url("data:image/svg+xml,%3csvg xmlns=
 .wla{display:flex;gap:2px;margin-left:6px;opacity:0;transition:opacity .2s}.wli:hover .wla{opacity:1}
 .wlab{width:22px;height:22px;border:none;border-radius:3px;cursor:pointer;font-size:10px;display:flex;align-items:center;justify-content:center;font-weight:700}
 .wlab.b{background:var(--gn2);color:var(--gn)}.wlab.s{background:var(--rd2);color:var(--rd)}
+.wlpct{text-align:right;margin-left:10px;font-size:10px;font-weight:600;min-width:52px;font-variant-numeric:tabular-nums}
+/* Watchlist toolbar: filter + sort controls (advanced watchlist) */
+.wl-toolbar{display:flex;gap:6px;align-items:center;padding:6px 10px;border-bottom:1px solid var(--bd);background:var(--b1)}
+.wl-toolbar input.wl-filter{flex:1;min-width:0;background:var(--b2);border:1px solid var(--bd);border-radius:5px;color:var(--t1);font-size:11px;padding:5px 8px;outline:none}
+.wl-toolbar input.wl-filter:focus{border-color:var(--ac)}
+.wl-toolbar select.wl-sort{background:var(--b2);border:1px solid var(--bd);border-radius:5px;color:var(--t1);font-size:11px;padding:5px 6px;outline:none;cursor:pointer}
+.wl-toolbar .wl-count{font-size:10px;color:var(--t3);white-space:nowrap}
+/* Price-change flash on the watchlist last-price cell (up=green / down=red) */
+.wll.flash-up{animation:wlFUp .6s ease}
+.wll.flash-dn{animation:wlFDn .6s ease}
+@keyframes wlFUp{0%{color:#22c55e;text-shadow:0 0 8px rgba(34,197,94,.7)}100%{color:inherit;text-shadow:none}}
+@keyframes wlFDn{0%{color:#ef4444;text-shadow:0 0 8px rgba(239,68,68,.7)}100%{color:inherit;text-shadow:none}}
 .sigc{padding:10px;border-radius:6px;border:1px solid var(--bd);margin-bottom:8px}.sigc.bsg{background:var(--gn2);border-color:rgba(34,197,94,.25)}.sigc.ssg{background:var(--rd2);border-color:rgba(239,68,68,.25)}.sigc.hsg{background:var(--yl2);border-color:rgba(234,179,8,.25)}
 .oct{width:100%;border-collapse:collapse;font-size:10px}.oct th{padding:5px 6px;background:var(--b2);color:var(--t3);font-size:10px;text-transform:uppercase;border-bottom:1px solid var(--bd)}.oct td{padding:4px 6px;border-bottom:1px solid var(--bd);text-align:center}.oct .stk{background:var(--b2);font-weight:700;color:var(--ac)}.oct td[data-ok]{cursor:pointer}.oct td[data-ok]:hover{outline:1px solid var(--ac);outline-offset:-1px}
 .tcon{position:fixed;top:54px;right:14px;z-index:9999;display:flex;flex-direction:column;gap:4px}
@@ -1335,7 +1347,7 @@ body{font-size:13px;line-height:1.45;font-variant-numeric:tabular-nums}
   </div>
 </div>
 
-<div class="pg compact-page pro-watch-page" id="pg-watch"><div class="page-head"><div><div class="page-title">Market Watch</div><div class="page-sub">Live prices, quick execution and instrument inspection</div></div><div class="page-actions"><button type="button" class="icon-btn" onclick="ldWQ()">↻</button></div></div><section class="pro-panel pro-watch-panel"><div class="pro-panel-head"><span>Watchlist</span><span>Use global search to add instruments</span></div><div class="wl-tabs" id="wlTabs"></div><div class="pro-panel-body" style="padding:0" id="wB"><div class="emp"><div class="ed">Search & add</div></div></div></section></div>
+<div class="pg compact-page pro-watch-page" id="pg-watch"><div class="page-head"><div><div class="page-title">Market Watch</div><div class="page-sub">Live prices, quick execution and instrument inspection</div></div><div class="page-actions"><button type="button" class="icon-btn" onclick="ldWQ()">↻</button></div></div><section class="pro-panel pro-watch-panel"><div class="pro-panel-head"><span>Watchlist</span><span>Use global search to add instruments</span></div><div class="wl-tabs" id="wlTabs"></div><div class="wl-toolbar"><input type="text" class="wl-filter" id="wlFilter" placeholder="Filter symbols…" oninput="wlSetFilter(this.value)" spellcheck="false" autocomplete="off"><select class="wl-sort" id="wlSort" onchange="wlSetSort(this.value)"><option value="default">Order</option><option value="sym">Symbol A–Z</option><option value="last">By price</option><option value="chg">By change</option><option value="chgPct">By change %</option></select><span class="wl-count" id="wlCount"></span></div><div class="pro-panel-body" style="padding:0" id="wB"><div class="emp"><div class="ed">Search & add</div></div></div></section></div>
 
 <div class="pg compact-page" id="pg-orders">
   <div class="page-head">
@@ -2412,9 +2424,14 @@ function ldWD(){$.wlg=wlgLoad();const a=wlgActive();
 
 
 function selI(k,s){
+  /* AUDIT FIX: `proSetActiveInstrument(active, …)` referenced an undefined
+     variable `active`, throwing a ReferenceError that aborted the rest of the
+     function — so clicking a watchlist row never opened the chart. Hoist the
+     resolved instrument and pass it (falling back to the raw key/symbol). */
+  let inst=null;
   /* FUT auto-roll for watchlist -> chart clicks. */
   try{
-    const inst=normalizeInstrument(($.wl||[]).find(w=>w.k===k)||{k,s,n:s,x:String(k||'').split('_')[0]});
+    inst=normalizeInstrument(($.wl||[]).find(w=>w.k===k)||{k,s,n:s,x:String(k||'').split('_')[0]});
     if(inst){
       const r=chartResolveFut(inst);
       if(r.pendingMcx)applyMcxAsync(r.sym,inst.k);
@@ -2424,7 +2441,7 @@ function selI(k,s){
       }
     }
   }catch(e){}
-proSetActiveInstrument(active,true);$.cKey=k;$.cSym=s;$.cd=[];document.getElementById('cSN').textContent=s;['dC1','dO1','dA1'].forEach(id=>{const inp=document.querySelector(`#${id} input`);if(inp)inp.value=s;$.ddSel[id]={k,s};});nav('chart');
+proSetActiveInstrument(inst||{k,s,n:s,x:String(k||'').split('_')[0]},true);$.cKey=k;$.cSym=s;$.cd=[];document.getElementById('cSN').textContent=s;['dC1','dO1','dA1'].forEach(id=>{const inp=document.querySelector(`#${id} input`);if(inp)inp.value=s;$.ddSel[id]={k,s};});nav('chart');
 }
 
 function setupGlobalSearch(){const gS=document.getElementById('gS');let t=null;gS.addEventListener('input',()=>{clearTimeout(t);t=setTimeout(()=>gSr(gS.value),150);});gS.addEventListener('focus',()=>{if(gS.value)gSr(gS.value);});gS.addEventListener('blur',()=>setTimeout(gSh,250));}
@@ -3107,10 +3124,57 @@ async function ldH(){
 }
 
 function rnW(){
-  const c=document.getElementById('wB');if(!c)return;const clean=sanitizeWatchlist($.wl,{fallback:false,save:false});if(clean.length!==($.wl||[]).length){$.wl=clean;persistWatchlist();}if(!$.wl.length){c.innerHTML='<div class="emp"><div class="ed">Search & add instruments</div></div>';return;}
-  c.innerHTML=$.wl.map((w,i)=>{const q=$.lq[w.k]||{},last=Number(q.last_price),chg=toNum(q.net_change);return `<div class="wli" onclick="selI('${jsStr(w.k)}','${jsStr(w.s)}')"><div class="wls">${escapeHtml(w.s)}<span class="wlex">${escapeHtml(w.x||instrumentGroup(w))}</span><span class="nm">${escapeHtml(w.n||'')}</span></div><div class="wlp"><div class="wll">${Number.isFinite(last)?last.toFixed(2):'-'}</div><div class="wlc ${chg>=0?'pp':'pn'}">${chg>=0?'+':''}${chg.toFixed(2)}</div></div><div class="wla"><button type="button" class="wlab b" onclick="event.stopPropagation();qO('${jsStr(w.k)}','${jsStr(w.s)}','BUY')">B</button><button type="button" class="wlab s" onclick="event.stopPropagation();qO('${jsStr(w.k)}','${jsStr(w.s)}','SELL')">S</button><button type="button" class="wlab" style="background:var(--rd2);color:var(--rd)" onclick="event.stopPropagation();rmW(${i})">✕</button></div></div>`;}).join('');
-
-  wlgRenderTabs();}
+  const c=document.getElementById('wB');if(!c)return;const clean=sanitizeWatchlist($.wl,{fallback:false,save:false});if(clean.length!==($.wl||[]).length){$.wl=clean;persistWatchlist();}if(!$.wl.length){$.wvKeys=[];c.innerHTML='<div class="emp"><div class="ed">Search & add instruments</div></div>';wlUpdCount();wlgRenderTabs();return;}
+  /* AUDIT FIX: the old code rebuilt c.innerHTML on EVERY price tick, destroying
+     and recreating every row's DOM node. A hovered row lost its node (and the
+     hover/.wla state) each tick, so it visibly flashed. Now we render rows once
+     and PATCH the price/change cells in place when the visible set+order is
+     unchanged; we only rebuild when the list, filter or sort actually changes. */
+  const view=wlOrdered();
+  const newKeys=view.map(w=>w.k);
+  const domKeys=Array.from(c.querySelectorAll('.wli[data-k]')).map(r=>r.dataset.k);
+  $.wvKeys=newKeys;
+  if(domKeys.length!==newKeys.length||domKeys.some((k,i)=>k!==newKeys[i])){ wlRenderAll(c,view); }
+  else wlPatchRows(c,view);
+  wlUpdCount();wlgRenderTabs();
+}
+function wlChgPct(q){const last=toNum(q&&q.last_price,NaN),cp=toNum(q&&q.cp,NaN);return Number.isFinite(last)&&Number.isFinite(cp)&&cp? (last-cp)/cp*100 : NaN;}
+function wlOrdered(){
+  const wl=$.wl||[],f=String($.wFilter||'').trim().toUpperCase();
+  let list=f?wl.filter(w=>String((w.s||'')+' '+(w.n||'')+' '+(w.x||'')+' '+(w.segment||'')+' '+(w.type||'')).toUpperCase().includes(f)):wl.slice();
+  const s=$.wSort||'default';
+  if(s==='sym')list=list.slice().sort((a,b)=>String(a.s).localeCompare(String(b.s)));
+  else if(s==='last')list=list.slice().sort((a,b)=>toNum($.lq[b.k]?.last_price)-toNum($.lq[a.k]?.last_price));
+  else if(s==='chg')list=list.slice().sort((a,b)=>toNum($.lq[b.k]?.net_change)-toNum($.lq[a.k]?.net_change));
+  else if(s==='chgPct')list=list.slice().sort((a,b)=>wlChgPct($.lq[b.k])-wlChgPct($.lq[a.k]));
+  return list;
+}
+function wlRowHtml(w){
+  const q=$.lq[w.k]||{},last=Number(q.last_price),chg=toNum(q.net_change),pct=wlChgPct(q),cls=chg>=0?'pp':'pn';
+  const pctTxt=Number.isFinite(pct)?(pct>=0?'+':'')+pct.toFixed(2)+'%':'-';
+  return `<div class="wli" data-k="${jsStr(w.k)}" data-last="${Number.isFinite(last)?last:''}" onclick="selI('${jsStr(w.k)}','${jsStr(w.s)}')"><div class="wls">${escapeHtml(w.s)}<span class="wlex">${escapeHtml(w.x||instrumentGroup(w))}</span><span class="nm">${escapeHtml(w.n||'')}</span></div><div class="wlp"><div class="wll">${Number.isFinite(last)?last.toFixed(2):'-'}</div><div class="wlc ${cls}">${Number.isFinite(last)?(chg>=0?'+':'')+chg.toFixed(2):'-'}</div></div><div class="wlpct ${cls}">${pctTxt}</div><div class="wla"><button type="button" class="wlab b" onclick="event.stopPropagation();qO('${jsStr(w.k)}','${jsStr(w.s)}','BUY')">B</button><button type="button" class="wlab s" onclick="event.stopPropagation();qO('${jsStr(w.k)}','${jsStr(w.s)}','SELL')">S</button><button type="button" class="wlab" style="background:var(--rd2);color:var(--rd)" onclick="event.stopPropagation();rmWKey('${jsStr(w.k)}')">✕</button></div></div>`;
+}
+function wlRenderAll(c,view){c.innerHTML=view.map(wlRowHtml).join('');}
+function wlPatchRows(c,view){
+  const rows=c.querySelectorAll('.wli[data-k]');
+  view.forEach((w,i)=>{
+    const row=rows[i];if(!row)return;
+    const q=$.lq[w.k]||{},last=Number(q.last_price),chg=toNum(q.net_change),pct=wlChgPct(q),cls=chg>=0?'pp':'pn';
+    const prev=Number(row.dataset.last);
+    row.dataset.last=Number.isFinite(last)?last:'';
+    const priceEl=row.querySelector('.wll'),txt=Number.isFinite(last)?last.toFixed(2):'-';
+    if(priceEl&&priceEl.textContent!==txt)priceEl.textContent=txt;
+    if(Number.isFinite(last)&&Number.isFinite(prev)&&last!==prev){priceEl&&(priceEl.classList.remove('flash-up','flash-dn'),void priceEl.offsetWidth,priceEl.classList.add(last>prev?'flash-up':'flash-dn'));}
+    const chgEl=row.querySelector('.wlc'),cTxt=Number.isFinite(last)?(chg>=0?'+':'')+chg.toFixed(2):'-';
+    if(chgEl){if(chgEl.textContent!==cTxt)chgEl.textContent=cTxt;const want='wlc '+cls;if(chgEl.className!==want)chgEl.className=want;}
+    const pctEl=row.querySelector('.wlpct'),pctTxt=Number.isFinite(pct)?(pct>=0?'+':'')+pct.toFixed(2)+'%':'-';
+    if(pctEl){if(pctEl.textContent!==pctTxt)pctEl.textContent=pctTxt;const want='wlpct '+cls;if(pctEl.className!==want)pctEl.className=want;}
+  });
+}
+function wlUpdCount(){const el=document.getElementById('wlCount');if(el)el.textContent=`${($.wvKeys||[]).length}/${($.wl||[]).length}`;}
+function wlSetFilter(v){$.wFilter=v||'';const f=document.getElementById('wlFilter');if(f&&document.activeElement!==f)f.value=$.wFilter;rnW();}
+function wlSetSort(v){$.wSort=v||'default';rnW();}
+function rmWKey(k){const i=($.wl||[]).findIndex(w=>w.k===k);if(i<0)return;const [old]=$.wl.splice(i,1);persistWatchlist();rnW();if(old&&!wsKeyStillNeeded(old.k))wsSend('unsub',[old.k],'full');}
 
 async function ldWQ(){
   if(!$.tok)return;
