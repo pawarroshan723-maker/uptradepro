@@ -2619,6 +2619,11 @@ function anlC(){
 function ocInitProto(){
  try{
    if(typeof protobuf==='undefined'){ console.warn('protobufjs missing'); return false; }
+   /* PERF: decode int64 fields (ltt/ltq/vtt/vol/currentTs) directly as JS numbers
+      instead of Long objects. Values here are epoch-ms timestamps and quantities,
+      all far below Number.MAX_SAFE_INTEGER (9e15). This removes one Long object
+      allocation per int64 field per tick and lets us skip toObject() entirely. */
+   protobuf.util.Long=null;
    const txt=document.getElementById('protoText').textContent.trim();
    const parsed=protobuf.parse(txt);
    OC.root=parsed.root;
@@ -3227,7 +3232,7 @@ async function wsC(internal=false){
     if($.ws?.readyState===WebSocket.CONNECTING)return;if(!OC.Feed&&!ocInitProto())throw new Error('Protobuf decoder unavailable');clearTimeout($.wsReconnectTimer);try{if(typeof proInvalidate==='function')proInvalidate('/feed/market-data-feed/authorize');}catch(e){}const d=await upstoxFetch(END.WS_AUTH_V3,{_force:true}),url=d.data?.authorized_redirect_uri||d.data?.authorizedRedirectUri;if(!url)throw new Error('No WebSocket URL returned');
     const ws=new WebSocket(url);ws.binaryType='arraybuffer';$.ws=ws;upWS(0);if($.chartLiveEnabled)chartSetLiveState('connecting','Connecting');
     ws.onopen=()=>{if($.ws!==ws)return;$.wsReconnectAttempts=0;$.wsAuthFailStreak=0;$.wsLastMsgTs=Date.now();$.wsOpenedAt=Date.now();upWS(1);wsSend('sub',chartSharedKeys(),'full');if(OC.fallback){const t2=document.getElementById('ocLiveTxt');if(t2)t2.textContent=(document.getElementById('ocMode')?.value==='full_d30')?'Main WS fallback • depth 5':'Main WS fallback';if(OC.keys&&OC.keys.length){const m=OC.fallbackMode||(((document.getElementById('ocMode')?.value||'full')==='full_d30')?'full':(document.getElementById('ocMode')?.value||'full'));OC.fallbackMode=m;wsSend('sub',OC.keys,m);}}if($.chartLiveEnabled)chartSetLiveState('on','Live • waiting');};
-    ws.onmessage=async ev=>{if($.ws!==ws)return;$.wsLastMsgTs=Date.now();try{const ab=ev.data instanceof Blob?await ev.data.arrayBuffer():ev.data;if(!(ab instanceof ArrayBuffer))return;const dec=OC.Feed.decode(new Uint8Array(ab));const obj=OC.Feed.toObject(dec,{longs:Number});watchFeedObject(obj);if(OC.fallback&&typeof ocProcessFeed==='function')ocProcessFeed(obj);}catch(e){console.warn('Shared feed decode',e);}};
+    ws.onmessage=async ev=>{if($.ws!==ws)return;$.wsLastMsgTs=Date.now();try{const ab=ev.data instanceof Blob?await ev.data.arrayBuffer():ev.data;if(!(ab instanceof ArrayBuffer))return;const obj=OC.Feed.decode(new Uint8Array(ab));watchFeedObject(obj);if(OC.fallback&&typeof ocProcessFeed==='function')ocProcessFeed(obj);}catch(e){console.warn('Shared feed decode',e);}};
     ws.onclose=ev=>{if($.ws!==ws)return;$.ws=null;upWS(0);if(typeof wsLog==='function')wsLog('market','closed',ev);if($.chartLiveEnabled)chartSetLiveState('error','Reconnecting');const needed=$.chartLiveEnabled||($.wl||[]).length;if(!needed)return;if($.wsOpenedAt&&Date.now()-$.wsOpenedAt>60000)$.wsReconnectAttempts=0;$.wsOpenedAt=0;const attempt=($.wsReconnectAttempts||0)+1;$.wsReconnectAttempts=attempt;const delay=Math.min(30000,1500*Math.pow(2,Math.min(attempt,4)));$.wsReconnectTimer=setTimeout(()=>wsC(true),delay);if(typeof wsKickAll==='function')wsKickAll('main closed'+(ev&&ev.code?' code='+ev.code:''));};
     ws.onerror=()=>{if($.ws===ws){if($.chartLiveEnabled)chartSetLiveState('error','Feed error');if(!internal)ts('Market WebSocket error','e');}};
   }catch(e){upWS(0);if($.chartLiveEnabled)chartSetLiveState('error','Feed unavailable');if(!internal)ts('Market WebSocket: '+e.message,'e');else console.warn('Shared WebSocket',e.message);if(typeof wsLog==='function')wsLog('market','connect failed',e.message);
@@ -3633,7 +3638,7 @@ async function ocConnectWS(){
   try{if(typeof proInvalidate==='function')proInvalidate('/feed/market-data-feed/authorize');}catch(e){}const d=await upstoxFetch(END.WS_AUTH_V3,{_force:true});const url=d.data?.authorized_redirect_uri||d.data?.authorizedRedirectUri;if(!url)throw new Error('No WebSocket URL returned');
   const ws=new WebSocket(url);ws.binaryType='arraybuffer';OC.ws=ws;
   ws.onopen=()=>{if(OC.ws!==ws)return;OC.connected=true;OC.wsAttempts=0;OC.lastMsgTs=Date.now();OC.wsOpenedAt=Date.now();if(OC.fallback)ocDisableFallback('dedicated live');if(typeof wsCountUpdate==='function')wsCountUpdate();document.getElementById('ocLiveDot').className='live on';document.getElementById('ocLiveTxt').textContent='Live';const mode=document.getElementById('ocMode').value||'full';const sub={guid:(crypto.randomUUID?.()||'oc_'+Date.now()),method:'sub',data:{mode,instrumentKeys:OC.keys}};ws.send(new TextEncoder().encode(JSON.stringify(sub)));ts(`Option feed subscribed: ${OC.keys.length} keys`,'s');};
-  ws.onmessage=async ev=>{if(OC.ws!==ws)return;OC.lastMsgTs=Date.now();try{const ab=ev.data instanceof Blob?await ev.data.arrayBuffer():ev.data;if(!(ab instanceof ArrayBuffer))return;const dec=OC.Feed.decode(new Uint8Array(ab));ocProcessFeed(OC.Feed.toObject(dec,{longs:Number}));}catch(e){console.warn('Option feed decode',e);}};
+  ws.onmessage=async ev=>{if(OC.ws!==ws)return;OC.lastMsgTs=Date.now();try{const ab=ev.data instanceof Blob?await ev.data.arrayBuffer():ev.data;if(!(ab instanceof ArrayBuffer))return;ocProcessFeed(OC.Feed.decode(new Uint8Array(ab)));}catch(e){console.warn('Option feed decode',e);}};
   ws.onclose=ev=>{if(OC.ws!==ws)return;OC.ws=null;OC.connected=false;if(typeof wsLog==='function')wsLog('option-chain','closed',ev);const dot=document.getElementById('ocLiveDot');if(dot)dot.className='live off';const txt=document.getElementById('ocLiveTxt');if(OC.wantLive){ocEnableFallback('dedicated dropped'+(ev&&ev.code?' code='+ev.code:''));}else if(txt)txt.textContent='Closed';if(typeof ocWsBadge==='function')ocWsBadge();};
   ws.onerror=()=>{if(OC.ws===ws&&typeof wsLog==='function')wsLog('option-chain','socket error (close event will follow)');};
 }
